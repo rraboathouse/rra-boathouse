@@ -1,0 +1,13 @@
+{
+  "name": "RRA Boathouse",
+  "short_name": "Boathouse",
+  "description": "Rockland Rowing Association: reserve boats, check out and in, see who is on the lake.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2E99CE",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
