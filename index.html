@@ -22,13 +22,14 @@
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom));}
 
   header{position:sticky; top:0; z-index:30; background:var(--card); border-bottom:1px solid var(--line);
-    display:flex; align-items:center; gap:12px; padding:10px 14px; padding-top:calc(10px + env(safe-area-inset-top));}
-  header img{height:30px; display:block;}
+    display:flex; align-items:center; gap:8px; padding:10px 12px; padding-top:calc(10px + env(safe-area-inset-top));}
+  header img{height:27px; display:block; flex:none;}
   header .h-title{flex:1; min-width:0;}
-  header .h-title b{font-size:16px; display:block; line-height:1.1;}
-  header .h-title span{font-size:11.5px; color:var(--muted);}
-  .iconbtn{border:1px solid var(--line); background:var(--card); color:var(--blue-dark);
-    border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  header .h-title b{font-size:16px; display:block; line-height:1.15;}
+  header .h-title span{font-size:11px; color:var(--muted); display:block;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .iconbtn{border:1px solid var(--line); background:var(--card); color:var(--blue-dark); flex:none;
+    border-radius:10px; width:38px; height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .iconbtn:active{background:var(--blue-pale);}
   .iconbtn svg{width:20px; height:20px;}
   .spin{animation:spin 1s linear infinite;}
@@ -130,6 +131,8 @@
   .resline .t{font-weight:700; white-space:nowrap;}
   .datehead{font-size:12px; font-weight:700; color:var(--muted); margin:10px 2px 4px; text-transform:uppercase; letter-spacing:.06em;}
   .linkbtn{background:none; border:none; color:var(--red); font-size:13px; font-weight:700; cursor:pointer; padding:6px;}
+  .linkbtn.edit{color:var(--blue-dark);}
+  .chip.wc{background:#eef4ea; color:#4a6b39;}
   .mt8{margin-top:8px;} .mt14{margin-top:14px;}
 </style>
 </head>
@@ -140,6 +143,9 @@
 <header>
   <img id="logo" alt="Rockland Rowing" src="data:image/png;base64,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">
   <div class="h-title"><b>Boathouse</b><span>Rockland Lake · Pull with Purpose</span></div>
+  <button class="iconbtn" id="adminbtn" aria-label="Club admin" onclick="openAdmin()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
   <button class="iconbtn" id="refreshbtn" aria-label="Refresh">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2 6.3"/><path d="M20 4v7h-7"/></svg>
   </button>
@@ -343,11 +349,20 @@ function go(tab){
 /* ============================================================ rendering === */
 function renderAll(){
   if (!S) return;
+  syncAdminButton();
   fillNameSelects();
   if (activeTab === 'lake') renderLake();
   if (activeTab === 'out') renderOut();
   if (activeTab === 'reserve') renderReserve();
   if (activeTab === 'boats') renderBoats();
+}
+
+/* Gear is visible to everyone while the gate is open; after that, admins only. */
+function syncAdminButton(){
+  var open = Number(S.settings.adminOpen) === 1;
+  var me = store('rraName') || '';
+  var isAdmin = (S.allPeople || []).some(function(p){ return p.name === me && p.isAdmin; });
+  $('adminbtn').style.display = (open || isAdmin) ? '' : 'none';
 }
 
 function fillNameSelects(){
@@ -424,7 +439,7 @@ function renderOut(){
         else if (b.maintenanceDue){ suffix = ' · service due'; }
         else if (b.openFlags){ suffix = ' · ' + b.openFlags + ' issue' + (b.openFlags>1?'s':''); }
         html += '<option value="' + esc(b.name) + '"' + dis + (b.name===prev?' selected':'') + '>' +
-          esc(b.name) + suffix + '</option>';
+          esc(b.name) + wcSuffix(b) + suffix + '</option>';
       });
       html += '</optgroup>';
     });
@@ -434,6 +449,25 @@ function renderOut(){
 }
 function labelForType(t){
   return {'1x':'Singles (1x)','2x':'Doubles (2x)','4x':'Quads (4x)','4+':'Fours (4+)'}[t] || t;
+}
+/* Weight class helpers. Blank weight class simply shows nothing. */
+function wcShort(w){
+  return {'lightweight':'lwt','midweight':'mwt','heavyweight':'hwt'}[String(w||'').toLowerCase()] || '';
+}
+function wcSuffix(b){
+  var s = wcShort(b.weightClass);
+  return s ? ' (' + s + ')' : '';
+}
+function ymd(d){
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function minLabel(m){
+  var h=Math.floor(m/60), mm=m%60, ap=h>=12?'PM':'AM', h12=h%12===0?12:h%12;
+  return h12+':'+('0'+mm).slice(-2)+' '+ap;
+}
+function dayLabel(dateStr){
+  if (dateStr === S.today) return 'Today';
+  return new Date(dateStr + 'T12:00:00').toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
 }
 function renderOutInfo(){
   var host = $('out-boatinfo'); host.innerHTML = '';
@@ -499,10 +533,10 @@ function openCheckin(logId){
 }
 
 /* --- Reserve --- */
-function renderReserve(){
-  var sel = $('res-boat'); var prev = sel.value;
+/* Option builders, shared by the booking form and the edit sheet. */
+function boatOptionsHtml(selected){
   var byType = {};
-  S.boats.filter(function(b){ return b.status === 'Available'; })
+  S.boats.filter(function(b){ return b.status === 'Available' || b.name === selected; })
     .forEach(function(b){ (byType[b.type] = byType[b.type] || []).push(b); });
   var html = '<option value="">Tap to pick a boat</option>';
   TYPE_ORDER.concat(Object.keys(byType).filter(function(t){ return TYPE_ORDER.indexOf(t) < 0; }))
@@ -510,32 +544,46 @@ function renderReserve(){
       if (!byType[t]) return;
       html += '<optgroup label="' + esc(labelForType(t)) + '">';
       byType[t].forEach(function(b){
-        html += '<option value="' + esc(b.name) + '"' + (b.name===prev?' selected':'') + '>' + esc(b.name) + '</option>';
+        html += '<option value="' + esc(b.name) + '"' + (b.name===selected?' selected':'') + '>' +
+          esc(b.name) + wcSuffix(b) + '</option>';
       });
       html += '</optgroup>';
     });
-  sel.innerHTML = html;
-
-  var dsel = $('res-date'); var dprev = dsel.value; var dhtml = '';
-  var d = new Date();
+  return html;
+}
+function dateOptionsHtml(selected){
+  var html = '', d = new Date();
   for (var i = 0; i <= S.settings.windowDays; i++){
-    var ds = d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+    var ds = ymd(d);
     var lbl = i===0 ? 'Today' : i===1 ? 'Tomorrow' : '';
     var nice = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
-    dhtml += '<option value="' + ds + '"' + (ds===dprev?' selected':'') + '>' + (lbl ? lbl + ' · ' : '') + nice + '</option>';
+    html += '<option value="' + ds + '"' + (ds===selected?' selected':'') + '>' + (lbl ? lbl + ' · ' : '') + nice + '</option>';
     d.setDate(d.getDate()+1);
   }
-  dsel.innerHTML = dhtml;
-
-  var ssel = $('res-start');
-  if (!ssel.options.length){
-    var shtml = '';
-    for (var m = 5*60; m <= 19*60; m += 15){
-      var h = Math.floor(m/60), mm = m%60, ap = h>=12?'PM':'AM', h12 = h%12===0?12:h%12;
-      shtml += '<option value="' + m + '"' + (m===6*60?' selected':'') + '>' + h12 + ':' + ('0'+mm).slice(-2) + ' ' + ap + '</option>';
-    }
-    ssel.innerHTML = shtml;
+  return html;
+}
+function startOptionsHtml(selected){
+  var html = '';
+  for (var m = 5*60; m <= 19*60; m += 15){
+    html += '<option value="' + m + '"' + (m===selected?' selected':'') + '>' + minLabel(m) + '</option>';
   }
+  return html;
+}
+function durOptionsHtml(selected){
+  var opts = [[60,'1 hour'],[90,'1.5 hours'],[120,'2 hours'],[180,'3 hours']];
+  if (selected && !opts.some(function(o){ return o[0] === selected; })){
+    opts.push([selected, (selected/60).toFixed(1).replace('.0','') + ' hours']);
+    opts.sort(function(a,b){ return a[0]-b[0]; });
+  }
+  return opts.map(function(o){
+    return '<option value="' + o[0] + '"' + (o[0]===selected?' selected':'') + '>' + o[1] + '</option>';
+  }).join('');
+}
+
+function renderReserve(){
+  var sel = $('res-boat'); sel.innerHTML = boatOptionsHtml(sel.value);
+  var dsel = $('res-date'); dsel.innerHTML = dateOptionsHtml(dsel.value);
+  var ssel = $('res-start'); if (!ssel.options.length) ssel.innerHTML = startOptionsHtml(6*60);
 
   var host = $('res-list');
   if (!S.reservations.length){
@@ -544,12 +592,10 @@ function renderReserve(){
     var byDate = {};
     S.reservations.forEach(function(r){ (byDate[r.dateStr] = byDate[r.dateStr] || []).push(r); });
     host.innerHTML = Object.keys(byDate).sort().map(function(ds){
-      var dd = new Date(ds + 'T12:00:00');
-      var head = (ds === S.today ? 'Today' : dd.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' }));
-      return '<div class="datehead">' + esc(head) + '</div>' + byDate[ds].map(function(r){
+      return '<div class="datehead">' + esc(dayLabel(ds)) + '</div>' + byDate[ds].map(function(r){
         return '<div class="resline"><span class="t">' + esc(r.startLabel) + '</span>' +
           '<span class="grow">' + esc(r.boat) + ' · ' + esc(r.name) + '</span>' +
-          '<button class="linkbtn" onclick="doCancelRes(\'' + esc(r.resId) + '\',\'' + esc(r.name) + '\')">Cancel</button></div>';
+          '<button class="linkbtn edit" onclick="openEditRes(\'' + esc(r.resId) + '\')">Edit</button></div>';
       }).join('');
     }).join('');
   }
@@ -563,13 +609,42 @@ function doReserve(){
     startMin:parseInt($('res-start').value,10), durMin:parseInt($('res-dur').value,10)
   }, $('res-go')).then(function(okd){ if (okd) toast('Booked. See you at the dock.'); });
 }
-function doCancelRes(resId, who){
+
+/* Change a booking: boat, day, start, or length. Cancelling lives here too. */
+function openEditRes(resId){
+  var r = null;
+  S.reservations.forEach(function(x){ if (x.resId === resId) r = x; });
+  if (!r) return;
   openModal(
-    '<h3>Cancel this booking?</h3><div class="sub">Booked by ' + esc(who) + '. Only cancel your own, or check with them first.</div>' +
-    '<button class="btn danger mt8" id="cx-go">Cancel booking</button>' +
-    '<button class="btn ghost mt8" onclick="closeModal()">Keep it</button>');
-  $('cx-go').onclick = function(){
-    mutate('apiCancelRes', { resId:resId }, $('cx-go')).then(function(okd){
+    '<h3>Edit booking</h3>' +
+    '<div class="sub">' + esc(r.name) + ' · ' + esc(r.boat) + ' · ' + esc(dayLabel(r.dateStr)) + ' at ' + esc(r.startLabel) + '</div>' +
+    '<label for="ed-boat">Boat</label>' +
+    '<div class="selwrap"><select id="ed-boat">' + boatOptionsHtml(r.boat) + '</select></div>' +
+    '<label for="ed-date">Day</label>' +
+    '<div class="selwrap"><select id="ed-date">' + dateOptionsHtml(r.dateStr) + '</select></div>' +
+    '<div class="row mt8">' +
+      '<div class="grow"><label for="ed-start" style="margin-top:0">Start</label>' +
+      '<div class="selwrap"><select id="ed-start">' + startOptionsHtml(r.startMin) + '</select></div></div>' +
+      '<div class="grow"><label for="ed-dur" style="margin-top:0">For</label>' +
+      '<div class="selwrap"><select id="ed-dur">' + durOptionsHtml(r.endMin - r.startMin) + '</select></div></div>' +
+    '</div>' +
+    '<button class="btn mt14" id="ed-save">Save changes</button>' +
+    '<button class="btn ghost mt8" onclick="closeModal()">Never mind</button>' +
+    '<div class="info mt14">Booked by ' + esc(r.name) + '. If this is not your booking, check with them before changing it.</div>' +
+    '<button class="btn danger mt8" id="ed-cancel">Cancel this booking</button>'
+  );
+  $('ed-save').onclick = function(){
+    var boat = $('ed-boat').value;
+    if (!boat) return toast('Pick a boat.', true);
+    mutate('apiEditRes', {
+      resId: resId, boat: boat, dateStr: $('ed-date').value,
+      startMin: parseInt($('ed-start').value, 10), durMin: parseInt($('ed-dur').value, 10)
+    }, $('ed-save')).then(function(okd){
+      if (okd){ closeModal(); toast('Booking updated.'); }
+    });
+  };
+  $('ed-cancel').onclick = function(){
+    mutate('apiCancelRes', { resId: resId }, $('ed-cancel')).then(function(okd){
       if (okd){ closeModal(); toast('Booking cancelled.'); }
     });
   };
@@ -608,7 +683,9 @@ function renderBoats(){
         var pct = b.serviceInterval > 0 ? Math.min(100, Math.round(100*b.usesSinceService/b.serviceInterval)) : 0;
         var cls = pct >= 100 ? 'bad' : pct >= 80 ? 'warn' : '';
         return '<div class="boatrow" onclick="openBoat(\'' + esc(b.name) + '\')">' +
-          '<div class="grow"><b>' + esc(b.name) + '</b>' + (b.quickRelease ? ' <span class="chip qr">QR</span>' : '') +
+          '<div class="grow"><b>' + esc(b.name) + '</b>' +
+          (b.weightClass ? ' <span class="chip wc">' + esc(wcShort(b.weightClass)) + '</span>' : '') +
+          (b.quickRelease ? ' <span class="chip qr">QR</span>' : '') +
           '<div class="meta">' + b.usesSinceService + ' of ' + b.serviceInterval + ' rows to next service · ' + b.usesTotal + ' total</div>' +
           '<div class="usebar"><i class="' + cls + '" style="width:' + pct + '%"></i></div></div>' +
           chip + '</div>';
@@ -621,6 +698,7 @@ function openBoat(name){
   var flags = S.flags.filter(function(f){ return f.boat === name; });
   openModal(
     '<h3>' + esc(b.name) + ' <span class="chip type">' + esc(b.type) + '</span>' +
+      (b.weightClass ? ' <span class="chip wc">' + esc(b.weightClass) + '</span>' : '') +
       (b.quickRelease ? ' <span class="chip qr">quick release</span>' : '') + '</h3>' +
     '<div class="sub">' + esc(b.status) + (b.outBy ? ' · on the water with ' + esc(b.outBy) : '') + '</div>' +
     '<div class="stats">' +
@@ -657,6 +735,182 @@ function doResolveFlag(flagId, btn){
     .then(function(okd){ if (okd){ closeModal(); toast('Flag resolved.'); } });
 }
 
+/* ================================================================ admin === */
+/* The gear. While Settings > "Anyone can open this gear" is on, every member
+   sees it. Turn that off and only people marked Admin can get in.            */
+
+function actor(){ return store('rraName') || $('out-name').value || ''; }
+
+function adminRow(title, sub, onclick, chips){
+  return '<div class="boatrow" onclick="' + onclick + '">' +
+    '<div class="grow"><b>' + esc(title) + '</b>' + (chips || '') +
+    (sub ? '<div class="meta">' + esc(sub) + '</div>' : '') + '</div>' +
+    '<span class="chip qr">edit</span></div>';
+}
+function backBtn(fn){
+  return '<button class="btn ghost mt14" onclick="' + fn + '">Back</button>';
+}
+
+function openAdmin(){
+  openModal(
+    '<h3>Club admin</h3>' +
+    '<div class="sub">Everything the boathouse needs, without opening the database.</div>' +
+    '<button class="btn secondary mt14" onclick="openAdminBoats()">Boats and weight classes</button>' +
+    '<button class="btn secondary mt8" onclick="openAdminRoster()">Roster</button>' +
+    '<button class="btn secondary mt8" onclick="openAdminSettings()">Club settings</button>' +
+    '<button class="btn ghost mt14" onclick="closeModal()">Done</button>'
+  );
+}
+
+/* --- boats --- */
+function openAdminBoats(){
+  var rows = S.boats.map(function(b){
+    var chips = (b.weightClass ? ' <span class="chip wc">' + esc(wcShort(b.weightClass)) + '</span>' : '') +
+      (b.status !== 'Available' ? ' <span class="chip bad">out of service</span>' : '');
+    return adminRow(b.name, b.type + (b.weightClass ? ' · ' + b.weightClass : ' · no weight class set'),
+      'openBoatEdit(\'' + esc(b.name).replace(/'/g, "\\'") + '\')', chips);
+  }).join('');
+  openModal(
+    '<h3>Boats</h3><div class="sub">Tap a boat to set its weight class or fix its details.</div>' +
+    '<button class="btn mt8" onclick="openBoatEdit(\'\')">Add a boat</button>' +
+    '<div class="card mt14" style="padding:4px 12px">' + rows + '</div>' +
+    backBtn('openAdmin()')
+  );
+}
+function openBoatEdit(name){
+  var b = name ? boatByName(name) : null;
+  var typeOpts = ['1x','2x','4x','4+','8+'].map(function(t){
+    return '<option value="' + t + '"' + (b && b.type===t?' selected':'') + '>' + labelForType(t) + '</option>';
+  }).join('');
+  var wcOpts = [['','Not set yet'],['lightweight','Lightweight'],['midweight','Midweight'],['heavyweight','Heavyweight']]
+    .map(function(o){
+      return '<option value="' + o[0] + '"' + (b && String(b.weightClass).toLowerCase()===o[0]?' selected':'') + '>' + o[1] + '</option>';
+    }).join('');
+  var statusOpts = ['Available','Out of service'].map(function(s){
+    return '<option value="' + s + '"' + (b && b.status===s?' selected':'') + '>' + s + '</option>';
+  }).join('');
+
+  openModal(
+    '<h3>' + (b ? esc(b.name) : 'Add a boat') + '</h3>' +
+    (b ? '<div class="sub">' + b.usesTotal + ' rows logged · ' + b.usesSinceService + ' since service</div>' : '<div class="sub">New boat in the fleet.</div>') +
+    '<label for="ab-name">Name</label>' +
+    '<input type="text" id="ab-name" value="' + (b ? esc(b.name) : '') + '" placeholder="e.g. BLUE HUDSON">' +
+    '<label for="ab-type">Type</label><div class="selwrap"><select id="ab-type">' + typeOpts + '</select></div>' +
+    '<label for="ab-wc">Weight class</label><div class="selwrap"><select id="ab-wc">' + wcOpts + '</select></div>' +
+    '<label for="ab-status">Status</label><div class="selwrap"><select id="ab-status">' + statusOpts + '</select></div>' +
+    '<label for="ab-int">Service every (rows)</label>' +
+    '<input type="text" id="ab-int" inputmode="numeric" value="' + (b ? b.serviceInterval : (S.settings.defaultInterval || 50)) + '">' +
+    '<label class="row" style="align-items:center; gap:8px;">' +
+      '<input type="checkbox" id="ab-qr" style="width:auto"' + (b && b.quickRelease ? ' checked' : '') + '>' +
+      '<span>Has the quick release system</span></label>' +
+    '<label for="ab-notes">Notes</label>' +
+    '<textarea id="ab-notes" placeholder="Anything the crew should know">' + (b ? esc(b.notes) : '') + '</textarea>' +
+    '<button class="btn mt14" id="ab-save">' + (b ? 'Save changes' : 'Add this boat') + '</button>' +
+    '<button class="btn ghost mt8" onclick="openAdminBoats()">Back</button>' +
+    (b ? '<div class="info mt14">Renaming keeps this boat\'s history: past outings, bookings, and flags follow the new name.</div>' +
+         '<button class="btn danger mt8" id="ab-del">Delete this boat</button>' : '')
+  );
+  $('ab-save').onclick = function(){
+    mutate('apiSaveBoat', {
+      actor: actor(), originalName: name, name: $('ab-name').value, type: $('ab-type').value,
+      weightClass: $('ab-wc').value, status: $('ab-status').value,
+      serviceInterval: $('ab-int').value, quickRelease: $('ab-qr').checked, notes: $('ab-notes').value
+    }, $('ab-save')).then(function(okd){
+      if (okd){ toast(name ? 'Boat updated.' : 'Boat added.'); openAdminBoats(); }
+    });
+  };
+  if ($('ab-del')) $('ab-del').onclick = function(){
+    mutate('apiDeleteBoat', { actor: actor(), name: name }, $('ab-del')).then(function(okd){
+      if (okd){ toast('Boat deleted.'); openAdminBoats(); }
+    });
+  };
+}
+
+/* --- roster --- */
+function openAdminRoster(){
+  var people = S.allPeople || S.roster;
+  var rows = people.map(function(m){
+    var chips = (m.isAdmin ? ' <span class="chip out">admin</span>' : '') +
+      (m.active === false ? ' <span class="chip bad">inactive</span>' : '');
+    return adminRow(m.name, m.program, 'openMemberEdit(\'' + esc(m.name).replace(/'/g, "\\'") + '\')', chips);
+  }).join('');
+  openModal(
+    '<h3>Roster</h3><div class="sub">' + people.length + ' people. Only active members appear in the name pickers.</div>' +
+    '<button class="btn mt8" onclick="openMemberEdit(\'\')">Add a person</button>' +
+    '<div class="card mt14" style="padding:4px 12px">' + rows + '</div>' +
+    backBtn('openAdmin()')
+  );
+}
+function openMemberEdit(name){
+  var people = S.allPeople || S.roster;
+  var m = null;
+  people.forEach(function(x){ if (x.name === name) m = x; });
+  var programs = ['Masters','Youth','Collegiate','Adaptive','Coach','Guest'];
+  if (m && programs.indexOf(m.program) < 0) programs.push(m.program);
+  var progOpts = programs.map(function(pr){
+    return '<option value="' + esc(pr) + '"' + (m && m.program===pr?' selected':'') + '>' + esc(pr) + '</option>';
+  }).join('');
+
+  openModal(
+    '<h3>' + (m ? esc(m.name) : 'Add a person') + '</h3>' +
+    '<div class="sub">' + (m ? 'Edit their details or take them off the pickers.' : 'They show up in the name pickers right away.') + '</div>' +
+    '<label for="am-name">Name</label>' +
+    '<input type="text" id="am-name" value="' + (m ? esc(m.name) : '') + '" placeholder="First Last">' +
+    '<label for="am-prog">Program</label><div class="selwrap"><select id="am-prog">' + progOpts + '</select></div>' +
+    '<label class="row" style="align-items:center; gap:8px;">' +
+      '<input type="checkbox" id="am-active" style="width:auto"' + (!m || m.active !== false ? ' checked' : '') + '>' +
+      '<span>Active (shows in the name pickers)</span></label>' +
+    '<label class="row" style="align-items:center; gap:8px;">' +
+      '<input type="checkbox" id="am-admin" style="width:auto"' + (m && m.isAdmin ? ' checked' : '') + '>' +
+      '<span>Club admin (can open this gear once it is locked)</span></label>' +
+    '<button class="btn mt14" id="am-save">' + (m ? 'Save changes' : 'Add to roster') + '</button>' +
+    '<button class="btn ghost mt8" onclick="openAdminRoster()">Back</button>' +
+    (m ? '<div class="info mt14">Someone who left the club is better set to inactive than deleted: that keeps their outings in the log. Renaming carries their history along.</div>' +
+         '<button class="btn danger mt8" id="am-del">Remove from roster</button>' : '')
+  );
+  $('am-save').onclick = function(){
+    mutate('apiSaveMember', {
+      actor: actor(), originalName: name, name: $('am-name').value, program: $('am-prog').value,
+      active: $('am-active').checked, isAdmin: $('am-admin').checked
+    }, $('am-save')).then(function(okd){
+      if (okd){ toast(name ? 'Roster updated.' : 'Added to the roster.'); openAdminRoster(); }
+    });
+  };
+  if ($('am-del')) $('am-del').onclick = function(){
+    mutate('apiDeleteMember', { actor: actor(), name: name }, $('am-del')).then(function(okd){
+      if (okd){ toast('Removed from the roster.'); openAdminRoster(); }
+    });
+  };
+}
+
+/* --- settings --- */
+function openAdminSettings(){
+  var s = S.settings;
+  openModal(
+    '<h3>Club settings</h3><div class="sub">These apply to everyone.</div>' +
+    '<label for="as-window">Members can book this many days ahead</label>' +
+    '<input type="text" id="as-window" inputmode="numeric" value="' + s.windowDays + '">' +
+    '<label for="as-int">Default service interval for new boats (rows)</label>' +
+    '<input type="text" id="as-int" inputmode="numeric" value="' + s.defaultInterval + '">' +
+    '<label for="as-hours">Flag an outing as overdue after (hours)</label>' +
+    '<input type="text" id="as-hours" inputmode="numeric" value="' + s.maxOutingHours + '">' +
+    '<label class="row" style="align-items:center; gap:8px;">' +
+      '<input type="checkbox" id="as-open" style="width:auto"' + (Number(s.adminOpen) === 1 ? ' checked' : '') + '>' +
+      '<span>Anyone can open this gear</span></label>' +
+    '<div class="info">Leave this on while the club gets used to the app. Turn it off and only people marked Admin in the Roster can get in, based on the name they pick. Mark your admins first.</div>' +
+    '<button class="btn mt14" id="as-save">Save settings</button>' +
+    '<button class="btn ghost mt8" onclick="openAdmin()">Back</button>'
+  );
+  $('as-save').onclick = function(){
+    mutate('apiSaveSettings', {
+      actor: actor(), windowDays: $('as-window').value, defaultInterval: $('as-int').value,
+      maxOutingHours: $('as-hours').value, adminOpen: $('as-open').checked
+    }, $('as-save')).then(function(okd){
+      if (okd){ toast('Settings saved.'); openAdmin(); }
+    });
+  };
+}
+
 /* =============================================================== modals === */
 function openModal(html){
   $('modal').innerHTML = html;
@@ -676,14 +930,16 @@ function mockApi(fn, p){
     return {
       now: Date.now(),
       today: mockToday(),
-      settings: { maxOutingHours: 3, defaultInterval: 50, windowDays: 14 },
+      settings: M.settings || { maxOutingHours: 3, defaultInterval: 50, windowDays: 7, adminOpen: 1 },
       boats: M.boats.map(function(b){ return {
         name:b.name, type:b.type, quickRelease:b.qr, status:b.status,
         usesTotal:b.total, usesSinceService:b.since, serviceInterval:50,
         lastServiced:b.last||'', notes:b.notes||'',
-        maintenanceDue: b.since >= 50, openFlags: openByBoat[b.name]||0, outBy: outBy[b.name]||''
+        maintenanceDue: b.since >= 50, openFlags: openByBoat[b.name]||0, outBy: outBy[b.name]||'',
+        weightClass: b.wc || ''
       };}),
-      roster: M.roster,
+        roster: M.roster.filter(function(r){ return r.active !== false; }),
+      allPeople: M.roster,
       onWater: M.log.filter(function(l){ return !l.inAt; }).map(function(l){ return {
         logId:l.id, boat:l.boat, ownBoat:l.ownBoat, rower:l.rower, crew:l.crew||'',
         outEpoch:l.outAt, outLabel:new Date(l.outAt).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})
@@ -747,6 +1003,51 @@ function mockApi(fn, p){
     case 'apiMarkServiced':
       M.boats.forEach(function(b){ if (b.name===p.boat){ b.since=0; b.last='today'; } });
       return okr();
+    case 'apiSaveBoat': {
+      var nm = String(p.name||'').toUpperCase();
+      if (!nm) return failr('Give the boat a name.');
+      if (!p.originalName){
+        if (M.boats.some(function(b){ return b.name===nm; })) return failr('There is already a boat called '+nm+'.');
+        M.boats.push({ name:nm, type:p.type, qr:!!p.quickRelease, status:p.status, total:0, since:0,
+                       notes:p.notes||'', wc:p.weightClass||'' });
+        return okr();
+      }
+      M.boats.forEach(function(b){
+        if (b.name===p.originalName){
+          b.name=nm; b.type=p.type; b.qr=!!p.quickRelease; b.status=p.status;
+          b.notes=p.notes||''; b.wc=p.weightClass||'';
+        }
+      });
+      M.flags.forEach(function(f){ if (f.boat===p.originalName) f.boat=nm; });
+      M.log.forEach(function(l){ if (l.boat===p.originalName) l.boat=nm; });
+      M.res.forEach(function(r){ if (r.boat===p.originalName) r.boat=nm; });
+      return okr();
+    }
+    case 'apiDeleteBoat':
+      M.boats = M.boats.filter(function(b){ return b.name !== p.name; });
+      return okr();
+    case 'apiSaveMember': {
+      var pn = String(p.name||'').trim();
+      if (!pn) return failr('Enter a name.');
+      if (!p.originalName){
+        if (M.roster.some(function(r){ return r.name===pn; })) return failr(pn+' is already on the roster.');
+        M.roster.push({ name:pn, program:p.program, active:p.active!==false, isAdmin:!!p.isAdmin });
+        return okr();
+      }
+      M.roster.forEach(function(r){
+        if (r.name===p.originalName){ r.name=pn; r.program=p.program; r.active=p.active!==false; r.isAdmin=!!p.isAdmin; }
+      });
+      return okr();
+    }
+    case 'apiDeleteMember':
+      M.roster = M.roster.filter(function(r){ return r.name !== p.name; });
+      return okr();
+    case 'apiSaveSettings':
+      if (!p.adminOpen && !M.roster.some(function(r){ return r.isAdmin; }))
+        return failr('Mark at least one person as an admin before locking the gear.');
+      M.settings = { windowDays:parseInt(p.windowDays,10), defaultInterval:parseInt(p.defaultInterval,10),
+                     maxOutingHours:parseInt(p.maxOutingHours,10), adminOpen: p.adminOpen ? 1 : 0 };
+      return okr();
   }
   return failr('Unknown call.');
 }
@@ -756,11 +1057,11 @@ if (MOCK){
   var h = Date.now();
   window._MDB = {
     boats: [
-      { name:'BLACK HUDSON #2', type:'1x', qr:true, status:'Available', total:41, since:41 },
+      { name:'BLACK HUDSON #2', type:'1x', qr:true, status:'Available', total:41, since:41, wc:'heavyweight' },
       { name:'BLACK HUDSON #3', type:'1x', qr:true, status:'Available', total:23, since:23 },
-      { name:'RED KANGHUA', type:'1x', qr:true, status:'Available', total:17, since:17 },
+      { name:'RED KANGHUA', type:'1x', qr:true, status:'Available', total:17, since:17, wc:'midweight' },
       { name:'RED HUDSON', type:'1x', qr:true, status:'Available', total:30, since:30 },
-      { name:'BANTAM ONE', type:'1x', qr:false, status:'Available', total:9, since:9 },
+      { name:'BANTAM ONE', type:'1x', qr:false, status:'Available', total:9, since:9, wc:'lightweight' },
       { name:'BANTAM TWO', type:'1x', qr:false, status:'Available', total:7, since:7 },
       { name:'SUPER FLY ONE', type:'1x', qr:false, status:'Available', total:12, since:12 },
       { name:'SUPER FLY TWO', type:'1x', qr:false, status:'Available', total:5, since:5 },
@@ -771,7 +1072,7 @@ if (MOCK){
       { name:'BLACK SINGLE', type:'1x', qr:false, status:'Out of service', total:0, since:0, notes:'Missing plate and footstretcher' },
       { name:'WHITE HUDSON', type:'1x', qr:false, status:'Out of service', total:0, since:0, notes:'Missing plate and footstretcher' },
       { name:'PANTHER', type:'2x', qr:true, status:'Available', total:33, since:33 },
-      { name:'SWORDFISH', type:'2x', qr:true, status:'Available', total:52, since:52 },
+      { name:'SWORDFISH', type:'2x', qr:true, status:'Available', total:52, since:52, wc:'heavyweight' },
       { name:'BLUEFIN', type:'2x', qr:true, status:'Available', total:38, since:38 },
       { name:'WILLIAM H.', type:'2x', qr:true, status:'Available', total:21, since:21 },
       { name:'THOMAS WILKINSON', type:'2x', qr:true, status:'Available', total:26, since:26 },
@@ -787,7 +1088,7 @@ if (MOCK){
       { name:'PUMA', type:'4+', qr:true, status:'Available', total:24, since:24 }
     ],
     roster: [
-      { name:'Peter Hein', program:'Masters' }, { name:'Kathy Kearney', program:'Masters' },
+      { name:'Peter Hein', program:'Masters', active:true, isAdmin:true }, { name:'Kathy Kearney', program:'Masters' },
       { name:'Leslie Horn', program:'Masters' }, { name:'Marc Barrachin', program:'Masters' },
       { name:'Roger Buck', program:'Masters' }, { name:'Lyndi Oxoby', program:'Masters' },
       { name:'Tom Chyla', program:'Masters' }, { name:'Maskit Ronen', program:'Masters' },
