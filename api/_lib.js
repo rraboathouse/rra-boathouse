@@ -17,7 +17,7 @@ function env(name) {
 /** Supabase REST call. Throws Error with .code (Postgres error code) on failure. */
 async function sb(path, opts = {}) {
   const key = env('SUPABASE_SERVICE_ROLE_KEY');
-  const url = env('SUPABASE_URL').replace(/\/+$/, '') + '/rest/v1/' + path;
+  const url = env('SUPABASE_URL').replace(/\/+$/, '').replace(/\/rest\/v1$/, '') + '/rest/v1/' + path;
   const headers = {
     apikey: key,
     Authorization: 'Bearer ' + key,
@@ -49,6 +49,13 @@ function nyToday() {
     .format(new Date());
 }
 
+/** yyyy-mm-dd plus n days, still as yyyy-mm-dd. */
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
 /** Minutes since midnight, club time. */
 function nyNowMinutes() {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: 'numeric', hour12: false })
@@ -78,13 +85,27 @@ function minToLabel(min) {
   return h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ap;
 }
 
+/** Reads the settings table into plain numbers, with fallbacks. */
+async function config() {
+  const rows = await sb('settings?select=*');
+  const sv = {};
+  rows.forEach(function (r) { sv[r.key] = r.value; });
+  return {
+    maxOutingHours: sv.max_outing_hours != null ? sv.max_outing_hours : 3,
+    defaultInterval: sv.default_service_interval != null ? sv.default_service_interval : 50,
+    windowDays: sv.reservation_window_days != null ? sv.reservation_window_days : 7,
+    adminOpen: sv.admin_open == null ? 1 : sv.admin_open,
+  };
+}
+
 /**
  * Assembles the full app state in the exact shape the front end renders.
- * Same contract as v1's getState() so index.html stayed almost unchanged.
+ * Boats come back alphabetical; the front end groups them by type, so each
+ * type section ends up alphabetical too.
  */
 async function buildState() {
   const results = await Promise.all([
-    sb('boats?select=*&order=id'),
+    sb('boats?select=*'),
     sb('roster?select=*&order=name'),
     sb('log?select=*&in_at=is.null'),
     sb('reservations?select=*&status=eq.Booked&order=date,start_min'),
@@ -99,7 +120,8 @@ async function buildState() {
   const cfg = {
     maxOutingHours: sv.max_outing_hours != null ? sv.max_outing_hours : 3,
     defaultInterval: sv.default_service_interval != null ? sv.default_service_interval : 50,
-    windowDays: sv.reservation_window_days != null ? sv.reservation_window_days : 14,
+    windowDays: sv.reservation_window_days != null ? sv.reservation_window_days : 7,
+    adminOpen: sv.admin_open == null ? 1 : sv.admin_open,
   };
 
   const onWater = log.map(function (r) {
@@ -124,6 +146,7 @@ async function buildState() {
   const boatsDto = boats.map(function (b) {
     return {
       name: b.name, type: b.type, quickRelease: !!b.quick_release, status: b.status,
+      weightClass: b.weight_class || '',
       usesTotal: b.uses_total, usesSinceService: b.uses_since_service,
       serviceInterval: b.service_interval,
       lastServiced: b.last_serviced ? niceDate(b.last_serviced) : '',
@@ -132,15 +155,22 @@ async function buildState() {
       openFlags: flagsByBoat[b.name] || 0,
       outBy: outByBoat[b.name] || '',
     };
+  }).sort(function (a, b) {
+    return a.name.localeCompare(b.name, 'en', { numeric: true, sensitivity: 'base' });
   });
 
-  const rosterDto = roster
-    .filter(function (r) { return r.active !== false; })
-    .map(function (r) { return { name: r.name, program: r.program || 'Members' }; })
-    .sort(function (a, b) {
-      if (a.program !== b.program) return a.program < b.program ? -1 : 1;
-      return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
-    });
+  const sortPeople = function (a, b) {
+    if (a.program !== b.program) return a.program < b.program ? -1 : 1;
+    return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+  };
+  const everyone = roster.map(function (r) {
+    return {
+      name: r.name, program: r.program || 'Members',
+      active: r.active !== false, isAdmin: !!r.is_admin,
+    };
+  }).sort(sortPeople);
+  // roster = who appears in the name pickers; allPeople = admin's full list
+  const rosterDto = everyone.filter(function (r) { return r.active; });
 
   const today = nyToday();
   const resDto = reservations.map(function (r) {
@@ -153,9 +183,9 @@ async function buildState() {
 
   return {
     now: Date.now(), today: today, settings: cfg,
-    boats: boatsDto, roster: rosterDto, onWater: onWater,
+    boats: boatsDto, roster: rosterDto, allPeople: everyone, onWater: onWater,
     reservations: resDto, flags: openFlags,
   };
 }
 
-module.exports = { sb, enc, str, nyToday, nyNowMinutes, minToLabel, buildState };
+module.exports = { sb, enc, str, nyToday, nyNowMinutes, addDays, minToLabel, config, buildState };
