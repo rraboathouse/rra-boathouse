@@ -12,6 +12,7 @@ create table boats (
   id serial primary key,
   name text unique not null,
   type text not null,                    -- 1x, 2x, 4x, 4+
+  weight_class text not null default '', -- lightweight | midweight | heavyweight (blank = not set)
   quick_release boolean not null default false,
   status text not null default 'Available',   -- Available | Out of service
   uses_total integer not null default 0,
@@ -26,7 +27,8 @@ create table roster (
   id serial primary key,
   name text unique not null,
   program text not null default 'Masters',
-  active boolean not null default true
+  active boolean not null default true,
+  is_admin boolean not null default false   -- can open the in-app admin gear once the gate is on
 );
 
 -- ------------------------------------------------------------ log ----------
@@ -103,7 +105,8 @@ alter table settings enable row level security;
 insert into settings (key, value) values
   ('max_outing_hours', 3),
   ('default_service_interval', 50),
-  ('reservation_window_days', 14);
+  ('reservation_window_days', 7),
+  ('admin_open', 1);   -- 1 = anyone can open the admin gear, 0 = only is_admin members
 
 insert into boats (name, type, quick_release, status, notes) values
   ('BLACK HUDSON #2',      '1x', true,  'Available', ''),
