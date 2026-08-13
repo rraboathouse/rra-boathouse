@@ -14,30 +14,68 @@ function env(name) {
   return v;
 }
 
-/** Supabase REST call. Throws Error with .code (Postgres error code) on failure. */
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+/**
+ * Worth retrying: a momentary server-side stumble rather than a real refusal.
+ * Supabase occasionally answers "JWT issued at future" when the clock on the
+ * instance handling the request lags the one that signed the key. It clears on
+ * its own in well under a second, so a quiet retry keeps it off members' screens.
+ */
+function isTransient(status, message) {
+  if (status >= 500 || status === 408 || status === 429) return true;
+  return /jwt|clock|issued at future|timeout|temporarily/i.test(String(message || ''));
+}
+
+/**
+ * Supabase REST call. Throws Error with .code (Postgres error code) on failure.
+ * Reads retry twice on transient failures; writes never retry, since a repeated
+ * checkout or booking would be worse than an error message.
+ */
 async function sb(path, opts = {}) {
   const key = env('SUPABASE_SERVICE_ROLE_KEY');
   const url = env('SUPABASE_URL').replace(/\/+$/, '').replace(/\/rest\/v1$/, '') + '/rest/v1/' + path;
+  const method = opts.method || 'GET';
   const headers = {
     apikey: key,
     Authorization: 'Bearer ' + key,
     'Content-Type': 'application/json',
   };
-  if (opts.method && opts.method !== 'GET') headers.Prefer = 'return=representation';
-  const res = await fetch(url, {
-    method: opts.method || 'GET',
-    headers: headers,
-    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
-  });
-  const text = await res.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : null; } catch (e) { /* non-JSON error body */ }
-  if (!res.ok) {
-    const err = new Error((data && (data.message || data.details)) || ('Database error (HTTP ' + res.status + ')'));
+  if (method !== 'GET') headers.Prefer = 'return=representation';
+
+  const maxAttempts = method === 'GET' ? 3 : 1;
+  let lastErr = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let res, text;
+    try {
+      res = await fetch(url, {
+        method: method,
+        headers: headers,
+        body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+      });
+      text = await res.text();
+    } catch (netErr) {
+      lastErr = netErr;
+      if (attempt < maxAttempts) { await sleep(attempt * 250); continue; }
+      throw netErr;
+    }
+
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch (e) { /* non-JSON error body */ }
+
+    if (res.ok) return data;
+
+    const message = (data && (data.message || data.details)) || ('Database error (HTTP ' + res.status + ')');
+    const err = new Error(message);
     err.code = data && data.code;
+    err.status = res.status;
+    lastErr = err;
+
+    if (attempt < maxAttempts && isTransient(res.status, message)) { await sleep(attempt * 250); continue; }
     throw err;
   }
-  return data;
+  throw lastErr;
 }
 
 function enc(v) { return encodeURIComponent(String(v)); }
